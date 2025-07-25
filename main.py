@@ -2,6 +2,8 @@ from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
+from game import Connect4Game
+
 app = FastAPI()
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -28,3 +30,5 @@ async def websocket_endpoint(websocket: WebSocket):
         except WebSocketDisconnect:
             print("WebSocket disconnected!")
             break
+
+test_game = Connect4Game()
