@@ -12,7 +12,7 @@
 
     socket.onopen = () => {
       console.log("🟢 WebSocket connected");
-      socket.send("Hello from browser");
+      socket.send(JSON.stringify({ action: "drop", column: 3 }))
     };
 
     socket.onmessage = (event) => {
