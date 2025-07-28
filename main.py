@@ -8,6 +8,10 @@ app = FastAPI()
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
+game = Connect4Game()
+player1_socket = None
+player2_socket = None
+
 
 @app.get("/")
 def read_root():
@@ -16,10 +20,22 @@ def read_root():
 
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
+    global player1_socket, player2_socket
     await websocket.accept()
     print("🔌 WebSocket connected!")
 
-    game = Connect4Game()
+    if player1_socket is None:
+        player1_socket = websocket
+        player_id = 1
+    elif player2_socket is None:
+        player2_socket = websocket
+        player_id = 2
+    else:
+        await websocket.send_json({"error": "Game is full"})
+        await websocket.close()
+        return
+
+    await websocket.send_json({"player": player_id})
 
     while True:
         try:
@@ -29,14 +45,16 @@ async def websocket_endpoint(websocket: WebSocket):
                 await websocket.send_json(game.get_state())
                 continue
 
-            if data["action"] == "drop":
+            if data.get("action") == "drop" and data.get("player") == game.current_player:
                 game.make_move(data["column"] - 1)
                 game.check_winner()
 
-            if not game.is_game_over:
-                game.switch_turn()
+                if not game.is_game_over:
+                    game.switch_turn()
 
-            await websocket.send_json(game.get_state())
+            for player_ws in [player1_socket, player2_socket]:
+                if player_ws:
+                    await player_ws.send_json(game.get_state())
 
         except WebSocketDisconnect:
             print("WebSocket disconnected!")
