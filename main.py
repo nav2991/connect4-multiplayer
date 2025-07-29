@@ -35,7 +35,7 @@ async def websocket_endpoint(websocket: WebSocket):
         await websocket.close()
         return
 
-    await websocket.send_json({"player": player_id})
+    await websocket.send_json({"player": player_id, "current_player": game.current_player})
 
     while True:
         try:
@@ -46,7 +46,7 @@ async def websocket_endpoint(websocket: WebSocket):
                 continue
 
             if data.get("action") == "drop" and data.get("player") == game.current_player:
-                game.make_move(data["column"] - 1)
+                game.make_move(data["column"])
                 game.check_winner()
 
                 if not game.is_game_over:
