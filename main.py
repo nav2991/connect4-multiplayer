@@ -57,5 +57,10 @@ async def websocket_endpoint(websocket: WebSocket):
                     await player_ws.send_json(game.get_state())
 
         except WebSocketDisconnect:
-            print("WebSocket disconnected!")
+            if websocket is player1_socket:
+                print("WebSocket 1 disconnected!")
+                player1_socket = None
+            elif websocket is player2_socket:
+                print("WebSocket 2 disconnected!")
+                player2_socket = None
             break

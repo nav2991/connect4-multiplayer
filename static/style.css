@@ -1,7 +1,31 @@
 body {
-  background-color: green;
+  background-color: #3366cc;
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-h1 {
-  color: red;
+.container {
+  display: grid;
+  grid-template-columns: repeat(7, 80px);
+  grid-template-rows: repeat(6, 80px);
+  gap: 5px;
+  background-color: #262729;
+  border-radius: 30px
+}
+
+.cell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+}
+
+.circle {
+  width: 60px;
+  height: 60px;
+  background-color: #3366cc;
+  border-radius: 50%;
 }
