@@ -24,5 +24,5 @@ A real-time multiplayer Connect 4 game built with **Python (FastAPI)**, **WebSoc
 2. Run: `uvicorn main:app --reload`
 3. Open: `http://localhost:8000` in two browser tabs.
 
-### 🖼️ Screenshot
+### 🎮 Gameplay Demo
 ![Demo](./screenshots/demo.gif)
