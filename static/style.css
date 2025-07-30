@@ -15,9 +15,7 @@ body {
   margin-bottom: 15px;
 }
 
-.player2-title {
-  text-align: right;
-}
+.player2-title { text-align: right; }
 
 .roboto-custom {
   font-family: "Roboto", sans-serif;
@@ -87,9 +85,7 @@ body {
   }
 }
 
-.flash {
-  animation: flash-bg 1s infinite;
-}
+.flash { animation: flash-bg 1s infinite; }
 
 .title-container {
   width: 100%;

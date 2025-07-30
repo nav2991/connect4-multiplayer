@@ -1,12 +1,12 @@
-# Online Multiplayer Connect 4
+# Real-Time Multiplayer Connect 4
 
-A real-time, online multiplayer Connect 4 game built with **Python (FastAPI)**, **WebSockets**, and **JavaScript**. It showcases skills in asynchronous I/O, concurrency, state management, and real-time frontend/backend synchronization.
+A real-time multiplayer Connect 4 game built with **Python (FastAPI)**, **WebSockets**, and **JavaScript**. It showcases skills in asynchronous I/O, concurrency, state management, and real-time frontend/backend synchronization.
 
 ### 🚀 Features
-- Two-player online support (via multiple browser tabs)
-- Real-time gameplay using WebSockets
-- Game logic using Python OOP
-- Visual Connect 4 board with interactive UI
+- Real-time two-player gameplay (in separate browser tabs on the same device)
+- WebSocket-based communication between players
+- Game logic implemented using Python OOP
+- Interactive Connect 4 board with responsive UI
 - Tracks player turns and win/draw conditions
 
 ### ⚙️ Technologies Used
