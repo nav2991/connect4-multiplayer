@@ -22,6 +22,14 @@
     </div>
 
     <div class="container" id="board"></div>
+    
+    <div class="play-again-container" id="play-again" style="display: none;">
+      <h3 class="play-again-text">Play Again?</h3>
+      <div class="play-again-buttons">
+        <button class="play-again-btn yes-btn">Yes</button>
+        <button class="play-again-btn no-btn" onclick="hidePlayAgain()">No</button>
+      </div>
+    </div>
   </div>
 
   <script>
@@ -118,7 +126,7 @@
         player1Box.classList.remove('flash', 'flash-player1', 'flash-player2');
         player2Box.classList.remove('flash', 'flash-player1', 'flash-player2');
         
-        // Add trophy and winner styling (only if not already present)
+        // Add trophy and winner styling
         if (data.winner === 1) {
           if (!player1Box.querySelector('.trophy')) {
             const trophy = document.createElement('div');
@@ -135,6 +143,11 @@
           }
           player2Box.classList.add('winner');
           player1Box.classList.remove('winner');
+        }
+        
+        // Only show play again message if it's not already visible
+        if (document.getElementById('play-again').style.display === 'none') {
+          document.getElementById('play-again').style.display = 'block';
         }
         
       } else {
@@ -154,6 +167,10 @@
     socket.onclose = () => {
       console.log("🔴 WebSocket disconnected");
     };
+
+    function hidePlayAgain() {
+      document.getElementById('play-again').style.display = 'none';
+    }
   </script>
 </body>
 </html>
