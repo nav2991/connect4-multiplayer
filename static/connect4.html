@@ -10,6 +10,9 @@
 <body>
   <div class="title-container">
     <h1 class="title"><span class="connect">CONNECT</span> <span class="four">4</span></h1>
+    <div id="waiting-message" style="display: none;">
+      Waiting for Player 2 🕐
+    </div>
   </div>
   <div class="game-wrapper">
     <div class="players-container">
@@ -62,6 +65,10 @@
     
     socket.onopen = () => {
       console.log("🟢 Connect4 WebSocket connected");
+      
+      if (playerId === 1) {
+        document.getElementById('waiting-message').style.display = 'block';
+      }
     };
     
     socket.onmessage = (event) => {
@@ -71,6 +78,10 @@
       if (data.player !== undefined) {
         playerId = data.player;
         console.log("Assigned player ID:", playerId);
+      }
+
+      if (data.type === 'game_start') {
+        document.getElementById('waiting-message').style.display = 'none';
       }
 
       // Update the board with new disc positions
@@ -175,6 +186,8 @@
         }
       });
     });
+
+
   </script>
 </body>
 </html>
