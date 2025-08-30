@@ -29,28 +29,59 @@
   </div>
 
   <script>
-    let roomCounter = 0;
+    const socket = new WebSocket(`ws://${window.location.host}/ws`);
     
-    // Add click event listener to the create room button
-    document.querySelector('.create-room-btn').addEventListener('click', function() {
-      roomCounter++;
-      createRoom(roomCounter);
-    });
+    socket.onopen = () => {
+      console.log("🟢 WebSocket connected");
+    };
     
-    function createRoom(roomNumber) {
+    socket.onmessage = (event) => {
+      console.log("📩 Message from server:", event.data);
+      const data = JSON.parse(event.data);
+      
+      if (data.type === 'room_list') {
+        console.log("Received room list:", data.rooms);
+        // Clear existing rooms and add all rooms from server
+        document.getElementById('rooms-list').innerHTML = '';
+        data.rooms.forEach(roomId => addRoom(roomId));
+      } else if (data.type === 'join_success') {
+        window.location.href = `/game?room=${data.room_id}&player=${data.player}`;
+      } else if (data.type === 'join_error') {
+        alert(data.message);
+      }
+    };
+    
+    socket.onclose = () => {
+      console.log("🔴 WebSocket disconnected");
+    };
+    
+    function addRoom(roomId) {
       const roomsList = document.getElementById('rooms-list');
       
       const roomBox = document.createElement('div');
       roomBox.className = 'room-box';
       roomBox.innerHTML = `
         <div class="room-info">
-          <span class="room-number">Room ${roomNumber}</span>
+          <span class="room-number">Room ${roomId}</span>
         </div>
-        <button class="join-room-btn">Join</button>
+        <button class="join-room-btn" onclick="joinRoom('${roomId}')">Join</button>
       `;
       
       roomsList.appendChild(roomBox);
     }
+    
+    function joinRoom(roomId) {
+      socket.send(JSON.stringify({
+        action: 'join_room',
+        room_id: roomId
+      }));
+    }
+    
+    document.querySelector('.create-room-btn').addEventListener('click', function() {
+      socket.send(JSON.stringify({
+        action: 'create_room'
+      }));
+    });
   </script>
 </body>
 </html>

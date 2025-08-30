@@ -172,47 +172,107 @@ body {
   outline-offset: 2px;
 }
 
-.play-again-container {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: #ffffff;
-  border: 3px solid #0066cc;
-  border-radius: 15px;
-  padding: 25px;
-  text-align: center;
-  z-index: 1000;
+.lobby-container {
+  margin-top: 30px;
+  padding: 30px;
+  background-color: #0066cc;
+  border-radius: 20px;
+  border: 1px solid #333333;
+  min-height: 400px;
+  width: 80%;
+  max-width: 600px;
 }
 
-.play-again-text {
-  color: #0066cc;
-  font-size: 1.8rem;
-  margin: 0 0 20px 0;
-  font-weight: 700;
-}
-
-.play-again-buttons {
+.lobby-header {
   display: flex;
-  gap: 20px;
-  justify-content: center;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  position: relative;
 }
 
-.play-again-btn {
-  padding: 12px 30px;
-  font-size: 1.1rem;
-  font-weight: 600;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
+.lobby-title {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #ffffff;
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin: 0;
+  font-family: 'Inter', sans-serif;
 }
 
-.yes-btn {
+.lobby-separator {
+  height: 1px;
+  background-color: #ffffff;
+  margin: 0 0 20px 0;
+}
+
+.create-room-btn {
   background-color: #4CAF50;
   color: #ffffff;
+  border: none;
+  padding: 10px 20px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  transition: transform 0.2s ease;
 }
 
-.no-btn {
-  background-color: #cf2525;
+.create-room-btn:hover {
+  transform: scale(1.05);
+}
+
+.plus-symbol {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.rooms-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.room-box {
+  background-color: #e6f3ff;
+  padding: 20px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid #0066cc;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.room-info {
+  display: flex;
+  align-items: center;
+}
+
+.room-box .room-number {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #0066cc;
+}
+
+.room-box .join-room-btn {
+  background-color: #0066cc;
   color: #ffffff;
+  border: none;
+  padding: 10px 20px;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.room-box .join-room-btn:hover {
+  background-color: #0052a3;
 }

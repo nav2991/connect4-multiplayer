@@ -22,23 +22,27 @@
     </div>
 
     <div class="container" id="board"></div>
-    
-    <div class="play-again-container" id="play-again" style="display: none;">
-      <h3 class="play-again-text">Play Again?</h3>
-      <div class="play-again-buttons">
-        <button class="play-again-btn yes-btn">Yes</button>
-        <button class="play-again-btn no-btn" onclick="hidePlayAgain()">No</button>
-      </div>
-    </div>
   </div>
 
   <script>
+    let playerId = null;
+    
+    const urlParams = new URLSearchParams(window.location.search);
+    const roomId = urlParams.get('room');
+    const playerParam = urlParams.get('player');
+    
+    if (roomId && playerParam) {
+      playerId = parseInt(playerParam);
+      console.log(`Connecting to game room ${roomId} as Player ${playerId}`);
+    } else {
+      console.error("Missing room ID or player number in URL");
+    }
+
+    // Build the game board: create 6 rows × 7 columns of cells
     const board = document.getElementById("board");
     const rows = 6;
     const cols = 7;
-    let playerId = null;
-
-    // Build the game board: create 6 rows × 7 columns of cells
+    
     for (let row = 0; row < rows; row++) {
       for (let col = 0; col < cols; col++) {
         const cell = document.createElement("div");
@@ -54,50 +58,19 @@
       }
     }
 
-    const allCells = document.querySelectorAll('.cell');
-
-    // Highlight column on mouseover (preview move)
-    allCells.forEach(cell => {
-      cell.addEventListener('mouseover', () => {
-        const col = cell.dataset.col;
-
-        document.querySelectorAll(`.cell[data-col="${col}"]`)
-          .forEach(c => c.classList.add('highlight'));
-      });
-
-      cell.addEventListener('mouseout', () => {
-        const col = cell.dataset.col;
-
-        document.querySelectorAll(`.cell[data-col="${col}"]`)
-          .forEach(c => c.classList.remove('highlight'));
-      });
-
-      // Send move to server when a cell is clicked
-      cell.addEventListener('click', () => {
-        const col = parseInt(cell.dataset.col);
-        if (playerId !== null) {
-          socket.send(JSON.stringify({
-            action: "drop",
-            player: playerId,
-            column: col
-          }));
-        }
-      });
-    });
-
-    const socket = new WebSocket("ws://localhost:8000/ws");
-
+    const socket = new WebSocket(`ws://${window.location.host}/ws/connect4/${roomId}/${playerId}`);
+    
     socket.onopen = () => {
-      console.log("🟢 WebSocket connected");
+      console.log("🟢 Connect4 WebSocket connected");
     };
-
+    
     socket.onmessage = (event) => {
       console.log("📩 Message from server:", event.data);
       const data = JSON.parse(event.data);
 
       if (data.player !== undefined) {
         playerId = data.player;
-        console.log("🎮 Assigned player ID:", playerId);
+        console.log("Assigned player ID:", playerId);
       }
 
       // Update the board with new disc positions
@@ -144,12 +117,6 @@
           player2Box.classList.add('winner');
           player1Box.classList.remove('winner');
         }
-        
-        // Only show play again message if it's not already visible
-        if (document.getElementById('play-again').style.display === 'none') {
-          document.getElementById('play-again').style.display = 'block';
-        }
-        
       } else {
         // GAME ACTIVE - Game is still being played
         
@@ -163,14 +130,51 @@
         }
       }
     };
-
-    socket.onclose = () => {
-      console.log("🔴 WebSocket disconnected");
+    
+    socket.onclose = (event) => {
+      if (event.code === 4004) {
+        console.error("Room not found");
+        alert("Room not found. Please return to the lobby.");
+        window.location.href = "/";
+      } else if (event.code === 4005) {
+        console.error("Invalid player ID");
+        alert("Invalid player ID. Please return to the lobby.");
+        window.location.href = "/";
+      } else {
+        console.log("🔴 Connect4 WebSocket disconnected");
+      }
     };
 
-    function hidePlayAgain() {
-      document.getElementById('play-again').style.display = 'none';
-    }
+    const allCells = document.querySelectorAll('.cell');
+
+    // Highlight column on mouseover (preview move)
+    allCells.forEach(cell => {
+      cell.addEventListener('mouseover', () => {
+        const col = cell.dataset.col;
+
+        document.querySelectorAll(`.cell[data-col="${col}"]`)
+          .forEach(c => c.classList.add('highlight'));
+      });
+
+      cell.addEventListener('mouseout', () => {
+        const col = cell.dataset.col;
+
+        document.querySelectorAll(`.cell[data-col="${col}"]`)
+          .forEach(c => c.classList.remove('highlight'));
+      });
+
+      // Send move to server when a cell is clicked
+      cell.addEventListener('click', () => {
+        const col = parseInt(cell.dataset.col);
+        if (playerId !== null) {
+          socket.send(JSON.stringify({
+            action: "drop",
+            player: playerId,
+            column: col
+          }));
+        }
+      });
+    });
   </script>
 </body>
 </html>
