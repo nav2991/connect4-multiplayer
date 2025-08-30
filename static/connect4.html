@@ -61,7 +61,7 @@
       }
     }
 
-    const socket = new WebSocket(`ws://${window.location.host}/ws/connect4/${roomId}/${playerId}`);
+    const socket = new WebSocket(`wss://${window.location.host}/ws/connect4/${roomId}/${playerId}`);
     
     socket.onopen = () => {
       console.log("🟢 Connect4 WebSocket connected");

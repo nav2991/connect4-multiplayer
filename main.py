@@ -110,7 +110,7 @@ async def connect4_websocket(websocket: WebSocket, room_id: str, player_id: int)
                     await websocket.send_json(room["game"].get_state())
                     continue
 
-                if data.get("action") == "drop" and data.get("player") == room["game"].current_player:
+                if data.get("player") == room["game"].current_player:
                     room["game"].make_move(data["column"])
                     room["game"].check_winner()
 
